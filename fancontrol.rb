@@ -78,7 +78,6 @@ history = []
 loop {
 	history.push temperature
 	history = history.last 8
-	puts history
 
 	temp = history.average
 
