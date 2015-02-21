@@ -1,10 +1,10 @@
+#!/usr/bin/ruby
+
 # SCRIPT (do not modify!)
 
 # HP 4510s fan control
 # REQUIREMENTS (pretty standard):
-# as new version of linux kernel as possible
 # ruby >= 2.0
-# lm_sensors
 # acpi
 
 require_relative 'config.rb'
@@ -26,8 +26,9 @@ def device(n)
 end
 
 def setbit(n, val)
-	File.write(device(8-n), val.to_s)
-	File.write(device(15-n), val.to_s)
+		File.write device(8-n), val.to_s
+		File.write device(15-n), val.to_s
+	rescue Errno::ENOENT => e
 end
 
 def set(level)
@@ -42,7 +43,7 @@ end
 
 def sensors
 	2.times.map { |i|
-		`sensors`[/Core #{i}:\s+\+(\d\d\.\d)°C/, 1].to_f
+		File.read("/sys/class/hwmon/hwmon0/temp#{i+2}_input").to_f / 1000
 	}
 end
 
@@ -54,7 +55,7 @@ def raw
 	(3..15).map { |i|
 		"/sys/devices/virtual/thermal/cooling_device#{i}/cur_state"
 	}.map { |f|
-		File.read(f).to_i
+		File.read(f).to_i rescue 9
 	}.join
 end
 

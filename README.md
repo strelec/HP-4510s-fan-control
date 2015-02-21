@@ -25,7 +25,5 @@ The utility will provide a nice debug output.
 
 Requirements
 ---
-* as new version of Linux kernel as possible
 * ruby >= 2.0
-* lm_sensors
 * acpi
