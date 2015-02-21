@@ -73,12 +73,14 @@ maxs = Ranges.map(&:last)
 }
 
 current = 0
+history = []
+
 loop {
-	temp = Array.new(10) {
-		set current
-		sleep 1
-		temperature
-	}.average
+	history.push temperature
+	history = history.last 8
+	puts history
+
+	temp = history.average
 
 	pinpoint = -> points {
 		points.index { |s|
@@ -90,4 +92,7 @@ loop {
 	current = [pinpoint[mins], current].min
 
 	puts "#{raw} #{get}/#{current} #{temp}"
+
+	set current
+	sleep 1
 }
